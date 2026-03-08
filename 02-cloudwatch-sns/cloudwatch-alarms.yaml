@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: CloudFormation Template for Creating snsTopic
-
+Parameters:
+  
 Resources:
   MySnsTopic:
     Type: AWS::SNS::Topic

@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json": "file:///Users/rayvasquez/Projects/aws-sysops-lab/02-cloudwatch-sns/cloudwatch-alarms.yaml"
+    }
+}

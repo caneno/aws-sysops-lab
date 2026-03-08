@@ -71,3 +71,8 @@ VPC → Subnets → Security Group → IGW → VPCGatewayAttachment → Route Ta
 - SSH access confirmed to public EC2 instance
 - Public IP assigned via MapPublicIpOnLaunch on public subnet
 - Full stack deployed via CloudFormation CLI only — no console
+
+### 12. Cost Management
+- Always delete stacks when not in use
+- Use t2.micro not t3.micro (free tier eligible)
+- Delete dependent stacks first before deleting the VPC stack
