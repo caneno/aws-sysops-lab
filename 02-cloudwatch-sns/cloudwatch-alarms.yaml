@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: CloudFormation Template for Creating snsTopic
 Parameters:
+  AlertEmail:
+    Type: String
+    Description: Email address for CloudWatch alarm notifications
   
 Resources:
   MySnsTopic:
@@ -10,3 +13,24 @@ Resources:
       Tags:
         - Key: Name
           Value: SnsLab
+  MySnsSubs:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref AlertEmail
+      Protocol: email
+      TopicArn: !Ref MySnsTopic
+  MyCWAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 70
+      EvaluationPeriods: 1
+      Period: 300
+      Statistic: Average
+      AlarmActions:
+        - !Ref MySnsTopic
+      Namespace: AWS/EC2
+      MetricName: CPUUtilization
+      Dimensions:
+        - Name: InstanceId
+          Value: !ImportValue my-vpc-stack-EC2

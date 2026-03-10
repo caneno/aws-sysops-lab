@@ -100,4 +100,9 @@ Resources:
           Value: MyEc2Ins
         - Key: Version
           Value: "3"
-
+Outputs:
+  Ec2Export:
+    Description: Exporting my EC2 ID
+    Value: !Ref MyEv2
+    Export: 
+      Name: my-vpc-stack-EC2
