@@ -21,6 +21,16 @@ Resources:
       Tags:
         - Key: Name
           Value: Public-Subnet
+  publicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: "us-east-1b"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Public-Subnet-2
 
   privateSubnet:
     Type: AWS::EC2::Subnet
@@ -84,6 +94,11 @@ Resources:
     Properties:
       RouteTableId: !Ref MyRouteTable
       SubnetId: !Ref publicSubnet
+  MySubRouteAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref MyRouteTable
+      SubnetId: !Ref publicSubnet2
   
   MyEv2:
     Type: AWS::EC2::Instance
@@ -105,4 +120,24 @@ Outputs:
     Description: Exporting my EC2 ID
     Value: !Ref MyEv2
     Export: 
-      Name: my-vpc-stack-EC2
+      Name: my-vpc-stack-EC2 
+  PublicSubExport:
+    Description: Exporting the Public Subnet ID
+    Value: !Ref publicSubnet
+    Export:
+      Name: my-vpc-public-sub
+  PublicSub2Export:
+    Description: Exporting the Public Subnet ID
+    Value: !Ref publicSubnet2
+    Export:
+      Name: my-vpc-public-sub2
+  SGExport:
+    Description: Exporting the Security Group Data
+    Value: !Ref MyVpcSecurityGroups
+    Export:
+      Name: my-vpc-sg
+  VpcExport:
+    Description: Exporting VPC ID
+    Value: !Ref myVPC
+    Export: 
+      Name: my-vpc-id

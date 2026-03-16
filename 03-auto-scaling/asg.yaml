@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation Template for ASG
+  
+Resources:
+  sysopsLabLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template
+      LaunchTemplateData:
+        ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
+        InstanceType: t2.micro
+        KeyName: ray-yrcs
+        SecurityGroupIds:
+          - !ImportValue my-vpc-sg
+        UserData:
+          Fn::Base64: |
+            #!/bin/bash
+            dnf install -y httpd
+            systemctl start httpd
+            systemctl enable httpd
+            echo "<h1>sysops-lab - $(hostname -f)</h1>" > /var/www/html/index.html
+  sysopsLabTgp:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !ImportValue my-vpc-id
+      Port: 80
+      Protocol: HTTP
+      Tags:
+        - Key: Name
+          Value: sysops-lab-tg
+  sysopsALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Scheme: internet-facing
+      Subnets:
+        - !ImportValue my-vpc-public-sub
+        - !ImportValue my-vpc-public-sub2
+      Tags:
+        - Key: Name
+          Value: sysops-alb
+  sysopsALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref sysopsLabTgp
+      LoadBalancerArn: !Ref sysopsALB
+      Port: 80
+      Protocol: HTTP
+  sysopsAsg:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref sysopsLabLaunchTemplate
+        Version: !GetAtt sysopsLabLaunchTemplate.LatestVersionNumber
+      DesiredCapacity: '3'
+      MaxSize: '5'
+      MinSize: '1'
+      VPCZoneIdentifier:
+        - !ImportValue my-vpc-public-sub
+        - !ImportValue my-vpc-public-sub2
+      TargetGroupARNs:
+        - !Ref sysopsLabTgp
+  sysopsAsgScalingPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref sysopsAsg
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 50
