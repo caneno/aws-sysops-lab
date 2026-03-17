@@ -59,6 +59,19 @@ Resources:
         - Key: Name
           Value: Allow-SSHandHTTP
       VpcId: !Ref myVPC
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP inbound to ALB
+      VpcId: !Ref myVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80 
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: sysops-alb-sg
 
   MyIGW:
     Type: AWS::EC2::InternetGateway
@@ -141,3 +154,8 @@ Outputs:
     Value: !Ref myVPC
     Export: 
       Name: my-vpc-id
+  ALBSGExport:
+    Description: Exporting ALB Security Group
+    Value: !Ref ALBSecurityGroup
+    Export:
+      Name: my-vpc-alb-sg

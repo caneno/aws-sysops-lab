@@ -36,6 +36,8 @@ Resources:
       Subnets:
         - !ImportValue my-vpc-public-sub
         - !ImportValue my-vpc-public-sub2
+      SecurityGroups:
+        - !ImportValue my-vpc-alb-sg
       Tags:
         - Key: Name
           Value: sysops-alb
