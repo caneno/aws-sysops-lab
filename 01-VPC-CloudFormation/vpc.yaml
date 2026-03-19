@@ -118,7 +118,6 @@ Resources:
     Properties:
       ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
       InstanceType: t3.micro
-      # IamInstanceProfile: Manage-Profile-Lab
       KeyName: ray-yrcs
       SecurityGroupIds:
         - !Ref MyVpcSecurityGroups

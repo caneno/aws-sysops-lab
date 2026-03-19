@@ -11,6 +11,7 @@
 ### 1. CIDR Selection
 - VPC: 10.0.0.0/16
 - Public Subnet: 10.0.1.0/24
+- For ALB Public Subnet 2: 10.0.3.0/24 in us-east-1
 - Private Subnet: 10.0.2.0/24
 - Why: /16 gives room to grow. Subnets are /24 for simplicity.
 
@@ -26,6 +27,7 @@ VPC → Subnets → Security Group → IGW → VPCGatewayAttachment → Route Ta
 
 ### 4. Subnet Design
 - Public subnet: us-east-1a — will route to IGW
+- Publib Subnet 2: us-east-1a — for ALB
 - Private subnet: us-east-1b — no IGW route
 - Why different AZs: if us-east-1a goes down, private resources 
   in us-east-1b remain reachable internally
