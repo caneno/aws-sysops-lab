@@ -1,5 +1,9 @@
 {
     "yaml.schemas": {
-        "https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json": "file:///Users/rayvasquez/Projects/aws-sysops-lab/02-cloudwatch-sns/cloudwatch-alarms.yaml"
+        "https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json": [
+            "file:///Users/rayvasquez/Projects/aws-sysops-lab/02-cloudwatch-sns/cloudwatch-alarms.yaml",
+            "file:///Users/rayvasquez/Projects/aws-sysops-lab/01-VPC-CloudFormation/vpc.yaml",
+            "file:///Users/rayvasquez/Projects/aws-sysops-lab/04-ssm-drift/aws-sysops-lab.yaml"
+        ]
     }
 }
