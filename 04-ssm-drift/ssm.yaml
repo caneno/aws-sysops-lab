@@ -2,4 +2,35 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Creating SSM and drift state associations
 
 Resources:
+  SSMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: 
+          Version: "2012-10-17"		 	 	 
+          Statement: 
+            - Effect: "Allow"
+              Principal: 
+                Service: 
+                  - "ec2.amazonaws.com"
+              Action: 
+                - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Tags:
+        - Key: Name
+          Value: "SSM-Role"
+  SSMInstancePro:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref SSMRole
+Outputs:
+  InstancePro:
+    Description: Information about the Instance profile ID
+    Value: !Ref SSMInstancePro
+    Export: 
+      Name: ssm-instance-pro
+      
+
+  
   
